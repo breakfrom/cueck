@@ -97,6 +97,7 @@ esto no lo hago con cualquiera, es contigo nada más.`;
 /**
  * CONFIGURACIÓN DEL LIBRO DE RECUERDOS
  */
+const asset = (path) => import.meta.env.BASE_URL + path.replace(/^\/+/, '')
 
 export const bookConfig = {
   meta: {
@@ -104,61 +105,61 @@ export const bookConfig = {
     from: 'Con todo mi cariño',
   },
 
-pages: [
-  {
-    type: 'cover',
-    background: '/pages/backgrounds/bc_1.png',
-    title: 'Para Gabriela',
-    subtitle: 'Gamboa',
-    style: 'front',
-  },
+  pages: [
+    {
+      type: 'cover',
+      background: asset('/pages/backgrounds/bc_1.png'),
+      title: 'Para Gabriela',
+      subtitle: 'Gamboa',
+      style: 'front',
+    },
 
-  {
-    type: 'mixed',
-    background: '/pages/backgrounds/bc_2.png',
-    style: 'editorial',
-    presentation: 'stacked',
-    content: `La penumbra del cine`,
-    images: ['/fotos/1.jpg', '/fotos/2.jpg'],
-    captions: ['sin avisar', 'se quedó'],
-  },
+    {
+      type: 'mixed',
+      background: asset('/pages/backgrounds/bc_2.png'),
+      style: 'editorial',
+      presentation: 'stacked',
+      content: `La penumbra del cine`,
+      images: [asset('/fotos/1.jpg'), asset('/fotos/2.jpg')],
+      captions: ['sin avisar', 'se quedó'],
+    },
 
-  {
-    type: 'mixed',
-    background: '/pages/backgrounds/bc_3.png',
-    style: 'quote',
-    presentation: 'polaroid-strip',
-    content: `La penumbra del cine`,
-    images: ['/fotos/3.jpg', '/fotos/4.jpg'],
-    captions: ['última hora', 'croqueta'],
-  },
+    {
+      type: 'mixed',
+      background: asset('/pages/backgrounds/bc_3.png'),
+      style: 'quote',
+      presentation: 'polaroid-strip',
+      content: `La penumbra del cine`,
+      images: [asset('/fotos/3.jpg'), asset('/fotos/4.jpg')],
+      captions: ['última hora', 'croqueta'],
+    },
 
-  {
-    type: 'mixed',
-    background: '/pages/backgrounds/bc_4.png',
-    style: 'handwritten',
-    presentation: 'taped',
-    content: `Lgante`,
-    images: ['/fotos/5.jpg', '/fotos/6.jpg'],
-    captions: ['que mire como mira su celular', 'cuando te robé algo'],
-  },
+    {
+      type: 'mixed',
+      background: asset('/pages/backgrounds/bc_4.png'),
+      style: 'handwritten',
+      presentation: 'taped',
+      content: `Lgante`,
+      images: [asset('/fotos/5.jpg'), asset('/fotos/6.jpg')],
+      captions: ['que mire como mira su celular', 'cuando te robé algo'],
+    },
 
-  {
-    type: 'mixed',
-    background: '/pages/backgrounds/bc_5.png',
-    style: 'floating',
-    presentation: 'floating-frame',
-    content: `Antes de que te enojes.`,
-    images: ['/fotos/7.jpg', '/fotos/1.jpg'],
-    captions: ['la más linda', 'modelito'],
-  },
+    {
+      type: 'mixed',
+      background: asset('/pages/backgrounds/bc_5.png'),
+      style: 'floating',
+      presentation: 'floating-frame',
+      content: `Antes de que te enojes.`,
+      images: [asset('/fotos/7.jpg'), asset('/fotos/1.jpg')],
+      captions: ['la más linda', 'modelito'],
+    },
 
-  {
-    type: 'cover',
-    background: '/pages/backgrounds/bc_6.png',
-    title: '¿Continuamos?',
-    subtitle: 'tú decides',
-    style: 'back',
-  },
-]
-};
+    {
+      type: 'cover',
+      background: asset('/pages/backgrounds/bc_6.png'),
+      title: '¿Continuamos?',
+      subtitle: 'tú decides',
+      style: 'back',
+    },
+  ],
+}

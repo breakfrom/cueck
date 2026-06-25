@@ -1,0 +1,1215 @@
+/* ==========================================================================
+   PHOTO PRESENTATION COMPONENTS — Master Stylesheet
+   Romantic scrapbook photo library
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   SHARED / BASE STYLES
+   -------------------------------------------------------------------------- */
+
+/* Paper-like photo card base */
+.photo-paper {
+  background: #fdfbf7;
+  background-image:
+    radial-gradient(ellipse at 35% 18%, rgba(255,255,255,0.42), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(116,83,50,0.014) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, #fffaf0 0%, #fdfbf7 58%, #f2e6d3 100%);
+  box-shadow:
+    0 1px 1px rgba(255,255,255,0.75) inset,
+    0 1px 2px rgba(0, 0, 0, 0.10),
+    0 6px 14px rgba(0, 0, 0, 0.09),
+    0 16px 34px rgba(0, 0, 0, 0.07);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.photo-paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(90, 63, 36, 0.055),
+    inset 0 -10px 18px rgba(97, 67, 38, 0.055);
+}
+
+.photo-paper img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+.photo-placeholder {
+  width: 180px;
+  height: 140px;
+  background: linear-gradient(135deg, #f0ebe3 0%, #e8e0d4 50%, #f0ebe3 100%);
+  border-radius: 1px;
+}
+
+.photo-placeholder--strip {
+  width: 120px;
+  height: 90px;
+}
+
+.photo-placeholder--postcard {
+  width: 200px;
+  height: 160px;
+}
+
+/* --------------------------------------------------------------------------
+   1. STRING WITH PINS
+   -------------------------------------------------------------------------- */
+
+.photo-string-container {
+  position: relative;
+  min-height: 320px;
+  padding-top: 10px;
+}
+
+.photo-string-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.photo-string-photos {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+  padding: 0 10px;
+}
+
+.photo-string-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.photo-clothespin {
+  z-index: 3;
+  margin-bottom: -12px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.photo-string-photo {
+  padding: 6px;
+  width: 150px;
+  height: auto;
+}
+
+.photo-string-photo img {
+  width: 138px;
+  height: 110px;
+}
+
+.photo-string-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 4px;
+  padding: 0 4px 4px;
+}
+
+/* --------------------------------------------------------------------------
+   2. TAPED PHOTO
+   -------------------------------------------------------------------------- */
+
+.photo-taped-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.photo-taped-item {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  transition: transform 0.4s ease;
+}
+
+.photo-taped-photo {
+  padding: 6px;
+  width: 180px;
+}
+
+.photo-taped-photo img {
+  width: 168px;
+  height: 130px;
+}
+
+/* Tape base */
+.photo-tape {
+  position: absolute;
+  height: 18px;
+  border-radius: 1px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Transparent tape */
+.photo-tape--transparent {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.3) 40%,
+    rgba(255, 255, 255, 0.45) 60%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(0.5px);
+}
+
+/* Masking / paper tape */
+.photo-tape--masking {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(160, 140, 100, 0.08) 0px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(
+      180deg,
+      #e8dcc0 0%,
+      #ddd0b4 50%,
+      #e5d9bd 100%
+    );
+  border: 1px solid rgba(180, 160, 120, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Washi tape */
+.photo-tape--washi {
+  height: 20px;
+  border: none;
+  opacity: 0.85;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 0;
+}
+
+.photo-taped-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   3. CLIPPED PHOTO
+   -------------------------------------------------------------------------- */
+
+.photo-clipped-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+}
+
+.photo-clipped-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  transition: transform 0.35s ease;
+}
+
+.photo-clip {
+  position: relative;
+  z-index: 5;
+  margin-bottom: -16px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+}
+
+.photo-clip--top { margin-bottom: -16px; }
+.photo-clip--left {
+  position: absolute;
+  left: -18px;
+  top: 30%;
+  margin-bottom: 0;
+}
+.photo-clip--right {
+  position: absolute;
+  right: -18px;
+  top: 30%;
+  margin-bottom: 0;
+}
+
+.photo-clipped-photo {
+  padding: 6px;
+  width: 170px;
+}
+
+.photo-clipped-photo img {
+  width: 158px;
+  height: 125px;
+}
+
+.photo-clipped-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   4. SEWN PHOTO
+   -------------------------------------------------------------------------- */
+
+.photo-sewn-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.photo-sewn-item {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.photo-sewn-photo {
+  padding: 8px;
+  width: 200px;
+}
+
+.photo-sewn-photo img {
+  width: 184px;
+  height: 148px;
+}
+
+.photo-sewn-stitches {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.photo-sewn-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   5. POLAROID STRIP
+   -------------------------------------------------------------------------- */
+
+.photo-polaroid-strip {
+  display: inline-block;
+  cursor: default;
+}
+
+.photo-polaroid-strip-body {
+  background: #fefdfb;
+  border-radius: 4px;
+  padding: 8px 10px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 6px 16px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.04);
+}
+
+.photo-polaroid-strip-perforations {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.photo-polaroid-strip-perforations--top {
+  margin-bottom: 4px;
+}
+
+.photo-polaroid-strip-perforations--bottom {
+  margin-top: 4px;
+}
+
+.photo-polaroid-strip-perf-hole {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.photo-polaroid-strip-frame {
+  padding: 4px 0;
+}
+
+.photo-polaroid-strip-image {
+  background: #111;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.photo-polaroid-strip-image img {
+  display: block;
+  width: 130px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.photo-polaroid-strip-caption {
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #5a4d3e;
+  text-align: center;
+  margin: 4px 0 2px;
+  padding: 0;
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   6. ENVELOPE
+   -------------------------------------------------------------------------- */
+
+.photo-envelope-container {
+  display: inline-block;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.13));
+}
+
+.photo-envelope {
+  position: relative;
+  width: 260px;
+  height: 170px;
+  border-radius: 3px;
+  box-shadow:
+    0 1px 1px rgba(255,255,255,0.45) inset,
+    0 2px 4px rgba(0, 0, 0, 0.10),
+    0 8px 18px rgba(0, 0, 0, 0.08),
+    0 18px 38px rgba(0, 0, 0, 0.06);
+  overflow: visible;
+  transform: translateZ(8px);
+}
+
+.photo-envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  z-index: 10;
+  transform-origin: top center;
+  perspective: 400px;
+}
+
+.photo-envelope-flap-shape {
+  width: 100%;
+  height: 100%;
+}
+
+.photo-envelope-seal {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.photo-envelope-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  overflow: visible;
+}
+
+.photo-envelope-folds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.photo-envelope-photos {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 15;
+}
+
+.photo-envelope-photo {
+  padding: 5px;
+  width: 120px;
+}
+
+.photo-envelope-photo img {
+  width: 110px;
+  height: 85px;
+}
+
+.photo-envelope-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 11px;
+  color: #6b5b4a;
+  margin-top: 2px;
+  padding-bottom: 2px;
+}
+
+.photo-envelope-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #9b8b78;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   7. POSTCARD PHOTO
+   -------------------------------------------------------------------------- */
+
+.photo-postcard-container {
+  display: inline-block;
+  cursor: default;
+}
+
+.photo-postcard {
+  display: flex;
+  width: 400px;
+  min-height: 220px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(139, 115, 85, 0.02) 0px,
+      transparent 1px,
+      transparent 4px
+    ),
+    linear-gradient(135deg, #f9f5ee 0%, #f5efe4 50%, #f0e8db 100%);
+  border-radius: 3px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 6px 16px rgba(0, 0, 0, 0.06),
+    0 10px 28px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.photo-postcard-left {
+  flex: 1;
+  padding: 12px;
+}
+
+.photo-postcard-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.photo-postcard-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  object-fit: cover;
+}
+
+.photo-postcard-divider {
+  width: 1px;
+  background: rgba(139, 115, 85, 0.15);
+  margin: 16px 0;
+}
+
+.photo-postcard-right {
+  flex: 1;
+  position: relative;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.photo-postcard-stamp {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border-radius: 1px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.photo-postcard-postmark {
+  position: absolute;
+  top: 2px;
+  right: 52px;
+  opacity: 0.6;
+  transform: rotate(-12deg);
+}
+
+.photo-postcard-message {
+  margin-top: 60px;
+  flex: 1;
+}
+
+.photo-postcard-text {
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 14px;
+  color: #5a4d3e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.photo-postcard-address {
+  margin-top: 12px;
+}
+
+.photo-postcard-line {
+  height: 1px;
+  background: rgba(139, 115, 85, 0.2);
+  margin-bottom: 14px;
+}
+
+.photo-postcard-line--short {
+  width: 60%;
+}
+
+.photo-postcard-date {
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 11px;
+  color: #9b8b78;
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   8. FOUND PHOTO
+   -------------------------------------------------------------------------- */
+
+.photo-found-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.photo-found-item {
+  display: inline-block;
+  cursor: default;
+  position: relative;
+}
+
+.photo-found-photo {
+  padding: 6px;
+  width: 190px;
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-found-photo img {
+  width: 178px;
+  height: 140px;
+}
+
+.photo-found-aging {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.photo-found-crease {
+  position: absolute;
+  width: 1px;
+  height: 80%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.06) 20%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.06) 80%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 1px 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.photo-found-edge-wear {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 15px rgba(0, 0, 0, 0.03),
+    inset 0 0 30px rgba(120, 100, 70, 0.03);
+}
+
+.photo-found-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #8b7b68;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   9. FLOATING FRAME
+   -------------------------------------------------------------------------- */
+
+.photo-floating-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+}
+
+.photo-floating-item {
+  display: inline-block;
+  cursor: default;
+}
+
+.photo-floating-frame {
+  border-style: solid;
+  border-radius: 1px;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.08),
+    0 20px 48px rgba(0, 0, 0, 0.06);
+  background: #fdfcfa;
+  padding: 3px;
+}
+
+.photo-floating-mat {
+  border: 8px solid #f5f2ec;
+  background: #f5f2ec;
+}
+
+.photo-floating-mat img {
+  display: block;
+  width: 170px;
+  height: 130px;
+  object-fit: cover;
+}
+
+.photo-floating-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   10. FOLDED CORNER
+   -------------------------------------------------------------------------- */
+
+.photo-folded-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.photo-folded-item {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+
+.photo-folded-photo {
+  padding: 6px;
+  width: 190px;
+}
+
+.photo-folded-photo img {
+  width: 178px;
+  height: 140px;
+}
+
+.photo-folded-fold {
+  filter: drop-shadow(-1px 1px 1px rgba(0, 0, 0, 0.08));
+}
+
+.photo-folded-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   11. STACKED PHOTOS
+   -------------------------------------------------------------------------- */
+
+.photo-stacked-container {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 250px;
+  min-height: 220px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.12));
+}
+
+.photo-stacked-item {
+  position: absolute;
+  padding: 6px;
+  width: 180px;
+}
+
+.photo-stacked-image img {
+  width: 168px;
+  height: 130px;
+  display: block;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+.photo-stacked-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #6b5b4a;
+  margin-top: 4px;
+}
+
+.photo-stacked-count {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #9b8b78;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   12. PHOTO UNDER VELLUM
+   -------------------------------------------------------------------------- */
+
+.photo-vellum-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 13px 20px rgba(0,0,0,0.12));
+}
+
+.photo-vellum-photo {
+  padding: 6px;
+  width: 200px;
+}
+
+.photo-vellum-photo img {
+  width: 188px;
+  height: 148px;
+}
+
+.photo-vellum-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.02) 0px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 252, 245, 0.88) 0%,
+      rgba(250, 245, 235, 0.82) 50%,
+      rgba(245, 240, 230, 0.86) 100%
+    );
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.02),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.photo-vellum-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.photo-vellum-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+  position: relative;
+  z-index: 6;
+}
+
+.photo-vellum-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #9b8b78;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   13. MOSAIC IRREGULAR
+   -------------------------------------------------------------------------- */
+
+.photo-mosaic-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.photo-mosaic-item {
+  padding: 5px;
+  cursor: default;
+  transition: z-index 0s;
+}
+
+.photo-mosaic-item.mosaic-sm {
+  width: 120px;
+}
+
+.photo-mosaic-item.mosaic-sm img {
+  width: 110px;
+  height: 85px;
+}
+
+.photo-mosaic-item.mosaic-md {
+  width: 160px;
+}
+
+.photo-mosaic-item.mosaic-md img {
+  width: 150px;
+  height: 115px;
+}
+
+.photo-mosaic-item.mosaic-lg {
+  width: 200px;
+}
+
+.photo-mosaic-item.mosaic-lg img {
+  width: 190px;
+  height: 148px;
+}
+
+.photo-mosaic-item img {
+  display: block;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+.photo-mosaic-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 11px;
+  color: #6b5b4a;
+  margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   14. PHOTO CHAIN
+   -------------------------------------------------------------------------- */
+
+.photo-chain-container {
+  position: relative;
+  min-height: 300px;
+}
+
+.photo-chain-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.photo-chain-photos {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+  padding-top: 20px;
+}
+
+.photo-chain-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+}
+
+.photo-chain-photo {
+  padding: 6px;
+  width: 160px;
+}
+
+.photo-chain-photo img {
+  width: 148px;
+  height: 115px;
+}
+
+.photo-chain-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 13px;
+  color: #6b5b4a;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   15. MINI ALBUM
+   -------------------------------------------------------------------------- */
+
+.photo-mini-album-container {
+  display: inline-block;
+  perspective: 600px;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.13));
+}
+
+.photo-mini-album-cover {
+  position: relative;
+  width: 160px;
+  height: 200px;
+  border-radius: 4px 8px 8px 4px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 6px 16px rgba(0, 0, 0, 0.08),
+    0 10px 28px rgba(0, 0, 0, 0.06),
+    inset -2px 0 4px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  overflow: hidden;
+  transform-origin: left center;
+}
+
+.photo-mini-album-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.photo-mini-album-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 12px;
+  height: 100%;
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.photo-mini-album-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 18px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-mini-album-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.photo-mini-album-pages {
+  width: 180px;
+}
+
+.photo-mini-album-page {
+  background:
+    repeating-linear-gradient(0deg, rgba(116,83,50,0.014) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, #fffaf0 0%, #fdfbf7 58%, #f2e6d3 100%);
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow:
+    0 1px 1px rgba(255,255,255,0.72) inset,
+    0 2px 5px rgba(0, 0, 0, 0.10),
+    0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.photo-mini-album-page-inner {
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.photo-mini-album-page-inner img {
+  display: block;
+  width: 156px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+.photo-mini-album-page-caption {
+  display: block;
+  text-align: center;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+  font-size: 12px;
+  color: #6b5b4a;
+  margin-top: 4px;
+  padding-bottom: 2px;
+}
+
+.photo-mini-album-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.photo-mini-album-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d4ccc0;
+  transition: background 0.3s ease;
+}
+
+.photo-mini-album-dot.active {
+  background: #8b7b68;
+}
+
+.photo-mini-album-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.photo-mini-album-nav-btn,
+.photo-mini-album-close-btn {
+  background: none;
+  border: 1px solid #d4ccc0;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+  color: #8b7b68;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-family: 'Caveat', 'Segoe Script', cursive;
+}
+
+.photo-mini-album-nav-btn:hover,
+.photo-mini-album-close-btn:hover {
+  background: #f5f0e8;
+  border-color: #8b7b68;
+}
+
+.photo-mini-album-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   GLOBAL TRANSITIONS & HOVER POLISH
+   -------------------------------------------------------------------------- */
+
+.photo-paper {
+  transition: box-shadow 0.4s ease, transform 0.35s ease, filter 0.35s ease;
+}
+
+.photo-paper:hover {
+  box-shadow:
+    0 1px 1px rgba(255,255,255,0.8) inset,
+    0 3px 6px rgba(0, 0, 0, 0.11),
+    0 10px 22px rgba(0, 0, 0, 0.09),
+    0 24px 44px rgba(0, 0, 0, 0.07);
+  transform: translateY(-2px) translateZ(10px);
+}
+
+/* Ensure images don't drag */
+.photo-paper img,
+.photo-mosaic-item img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

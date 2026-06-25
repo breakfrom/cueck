@@ -1,0 +1,107 @@
+/* ─────────────────────────────────────────────────────────
+ *  Decoratives.css
+ *  Physical-object feel for every scattered decorative
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Shared base ──────────────────────────────────────── */
+
+.deco-wrapper {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+              filter  0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: default;
+  user-select: none;
+  will-change: transform;
+}
+
+.deco-wrapper:hover {
+  transform: translateY(-3px) scale(1.06);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
+}
+
+/* ── Specific decorative tweaks ───────────────────────── */
+
+.deco-dried-flower svg,
+.deco-petal svg,
+.deco-leaf-sprig svg,
+.deco-drawn-heart svg,
+.deco-drawn-star svg,
+.deco-doodle svg {
+  display: block;
+}
+
+/* Sticky note */
+.deco-sticky-note {
+  position: relative;
+}
+
+.deco-sticky-note__body {
+  padding: 8px 10px 12px;
+  font-size: 11px;
+  line-height: 1.35;
+  min-width: 60px;
+  min-height: 50px;
+  box-shadow:
+    1px 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.deco-sticky-note__text {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  color: #3a3a3a;
+  word-break: break-word;
+}
+
+/* Postal stamp */
+.deco-postal-stamp {
+  position: relative;
+}
+
+/* Label tag */
+.deco-label {
+  position: relative;
+}
+
+/* Torn paper */
+.deco-torn-paper svg {
+  display: block;
+  filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.08));
+}
+
+/* Ribbon */
+.deco-ribbon svg {
+  display: block;
+}
+
+/* Button */
+.deco-button svg {
+  display: block;
+}
+
+.deco-button:hover {
+  transform: translateY(-2px) rotate(5deg) scale(1.08);
+}
+
+/* Cinema ticket */
+.deco-cinema-ticket {
+  filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Wax seal */
+.deco-wax-seal svg {
+  display: block;
+}
+
+.deco-wax-seal:hover {
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* Paper clip */
+.deco-paper-clip svg {
+  display: block;
+}
+
+.deco-paper-clip:hover {
+  transform: translateY(-4px) rotate(-8deg) scale(1.08);
+}

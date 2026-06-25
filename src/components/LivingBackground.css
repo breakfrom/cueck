@@ -1,0 +1,139 @@
+/* ─────────────────────────────────────────────────────────
+ *  LivingBackground.css
+ *  Styles for the 8 ambient background scenes
+ * ───────────────────────────────────────────────────────── */
+
+.living-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.ambient-color-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+  mix-blend-mode: screen;
+}
+
+.ambient-color-wisp {
+  position: absolute;
+  border-radius: 48% 52% 56% 44% / 42% 58% 46% 54%;
+  filter: blur(46px);
+  opacity: 0.08;
+  will-change: transform, opacity;
+}
+
+.ambient-color-wisp-green {
+  background:
+    radial-gradient(ellipse at 45% 50%, rgba(95, 255, 172, 0.34), transparent 62%),
+    radial-gradient(ellipse at 62% 44%, rgba(20, 164, 93, 0.20), transparent 70%);
+}
+
+.ambient-color-wisp-blue {
+  background:
+    radial-gradient(ellipse at 48% 50%, rgba(96, 174, 255, 0.30), transparent 64%),
+    radial-gradient(ellipse at 60% 45%, rgba(43, 86, 182, 0.18), transparent 72%);
+}
+
+/* ─── Scene : Floating Petals ─────────────────────────── */
+
+.petal {
+  position: absolute;
+  width: 18px;
+  height: 22px;
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.35;
+  filter: blur(0.5px);
+  will-change: transform, opacity;
+}
+
+/* ─── Scene : Warm Bokeh ──────────────────────────────── */
+
+.bokeh-orb {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+  filter: blur(28px);
+  will-change: transform, opacity;
+}
+
+/* ─── Scene : Dust Motes ──────────────────────────────── */
+
+.dust-mote {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.45;
+  filter: blur(0.3px);
+  will-change: transform, opacity;
+}
+
+/* ─── Scene : Leaf Shadows ────────────────────────────── */
+
+.leaf-shadow {
+  position: absolute;
+  opacity: 0.04;
+  filter: blur(6px);
+  will-change: transform;
+}
+
+.leaf-shadow-shape {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Scene : Rain Streaks ────────────────────────────── */
+
+.rain-streak {
+  position: absolute;
+  width: 1px;
+  opacity: 0.08;
+  filter: blur(0.4px);
+  will-change: transform, opacity;
+}
+
+/* ─── Scene : Fireflies ──────────────────────────────── */
+
+.firefly {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.firefly-glow {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: blur(3px);
+}
+
+/* ─── Scene : Watercolor Wash ─────────────────────────── */
+
+.watercolor-blob {
+  position: absolute;
+  border-radius: 42% 58% 63% 37% / 45% 52% 48% 55%;
+  opacity: 0.06;
+  filter: blur(40px);
+  will-change: transform, opacity;
+}
+
+/* ─── Scene : Candlelight ─────────────────────────────── */
+
+.candle-ambient {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+}
+
+.candle-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.08;
+  will-change: transform, opacity;
+}

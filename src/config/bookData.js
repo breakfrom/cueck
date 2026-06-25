@@ -97,8 +97,7 @@ esto no lo hago con cualquiera, es contigo nada más.`;
 /**
  * CONFIGURACIÓN DEL LIBRO DE RECUERDOS
  */
-const asset = (path) => import.meta.env.BASE_URL + path.replace(/^\/+/, '')
-
+const asset = (path) => `/cueck/${path.replace(/^\/+/, '')}`
 export const bookConfig = {
   meta: {
     dedicatedTo: 'Gabriela',

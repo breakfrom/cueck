@@ -6,6 +6,7 @@ const TRACKS = [
   'sound_1.mp3',
   'sound_2.mp3',
   'sound_3.mp3',
+   'sound_4.mp3',
 ].map((fileName) => `${SOUND_BASE_URL}sounds/${fileName}`);
 
 const TARGET_VOLUME = 0.16;

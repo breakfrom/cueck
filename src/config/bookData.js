@@ -47,48 +47,25 @@
 
 const fondoStickers = '/pages/fondo-stickers.webp';
 
-export const finalLetterText = `Gabriela, veo tus ojos y me abandonan los problemas,
+export const finalLetterText = `Gabriela, veo tus ojos y se me van los problemas. Eres la única que satisface mi desorden. Queda perfecto todo lo que haces. Causas en mí una sensación que nadie más causa.
 
-La ùnica que satisface mi desorden
+Dices que mis palabras nada van a cambiar. Quizá pienses que mis palabras se las llevará el viento, pero nunca es así cuando se dice con sentimiento. Que no es mentira que me tienes envuelto.
 
-Queda perfecto todo lo que realizas
+Si las dudas invaden tu decisión, yo el arreglo lo encuentro. Los celos y la toxicidad los dejaré aparte. Verte sé que no es fácil, pero estoy dispuesto.
 
-En cristal quisiera cuidarte
+Si por mis errores fue fugaz, ya me corregí para que sea permanente.
 
-Dices que mis palabras nada van a cambiar,
-quizá pienses que mis palabras se las llevará el viento,
-pero nunca es así, cuando se dice con sentimiento.
-Que no es mentira que me tienes envuelto.
+Todos los días necesito verte. Busco adueñarme de la casualidad. Yo puedo irte a ver, dime dónde tú estás. No importa si quieres salir de mañana. Da la oportunidad, por ti voy a pasar. Días mejores vendrán. Forma parte de nuestro nudo.
 
-Si las dudas invaden tu decisión
+Sé que soy molesto, pero siendo sincero, eres la chica perfecta para mi cuento. Déjame ser quien te trate como la princesa que eres. Y así un "no" salga de ti, pensar en eso en mi mente no cabe.
 
-el arreglo lo encuentro
+Recostada en mí, todo se siente mejor. Detrás de ti seguiré estando, y estuve. Esto no lo hago con cualquiera, es contigo nada más.
 
-Los celos y toxicidad la dejaré aparte
+Extraño preguntarte cómo fue tu día entero. Extraño el andar sin prisa, cualquier lugar. Robarte algunas cosas en el parque. Tu voz como bandera. El mundo se borraba. Tú eras la frontera donde todo tenía sentido y lugar.
 
-Verte sé que no es fácil, estoy dispuesto
+Tarde entendí que mis celos no eran de ti, sino de un miedo mío, oscuro y cobarde. Tú pedías confianza. Yo te di vigilancia. Vigilancia de cárcel que yo mismo forjé.
 
-Si fue algo fugaz, esperemos a que sea permanente
-Todos los días necesito verte, busco adueñarme de la casualidad.
-Yo puedo irte a ver, dime dónde tú estás,
-no importa si quieres salir de mañana.
-Da la oportunidad, por ti voy a pasar,
-
-días mejores vendrán
-
-forma parte de nuestro nudo
-
-Sé que soy molesto, pero siendo sincero
-
-eres la chica perfecta para mi cuento
-
-déjame ser quien te trate como la princesa que eres.
-y así un “no” salga de ti, pensar en eso en mi mente no cabe.
-
-Recostada en mí todo se siente mejor
-
-Detrás de ti seguiré estando y estuve,
-esto no lo hago con cualquiera, es contigo nada más.`;
+Hoy cambiaría discusiones, orgullo y error por tu risa pequeña y tu cabeza en mi pecho. Y quedarme callado, sabiendo que te fallé..`;
 
 /**
  * CONFIGURACIÓN DEL LIBRO DE RECUERDOS

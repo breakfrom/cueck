@@ -755,46 +755,44 @@ body {
   z-index: 90;
 }
 
-.background-music-button {
-  position: fixed;
-  top: max(14px, env(safe-area-inset-top));
-  right: max(14px, env(safe-area-inset-right));
-  z-index: 160;
-  display: inline-flex;
+.music-next-button {
+  position: fixed !important;
+  top: 16px !important;
+  right: 16px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
   min-width: 0;
   height: 34px;
   padding: 0 12px;
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 999px;
-  background: rgba(24, 14, 14, 0.36);
-  color: rgba(255,255,255,0.72);
+  background: rgba(24, 14, 14, 0.42);
+  color: rgba(255,255,255,0.82);
   font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 0.76rem;
   line-height: 1;
   letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.22);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 
-.background-music-button:hover {
+.music-next-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.92);
+  border-color: rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.96);
 }
 
-.background-music-button:active {
+.music-next-button:active {
   transform: translateY(0);
-}
-
-.background-music-note {
-  font-size: 0.92rem;
-  line-height: 1;
 }
 
 /* ═══════════════════════════════════════
@@ -1579,13 +1577,6 @@ body {
 
   .book-page-counter {
     bottom: max(12px, env(safe-area-inset-bottom));
-  }
-
-  .background-music-button {
-    top: max(12px, env(safe-area-inset-top));
-    right: max(12px, env(safe-area-inset-right));
-    height: 32px;
-    padding: 0 10px;
   }
 
   .welcome-card, .quiz-card-premium {

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 const SOUND_BASE_URL = import.meta.env.BASE_URL || '/';
 const TRACKS = [
@@ -244,7 +245,7 @@ export default function BackgroundMusic() {
     };
 
     const startFromInteraction = (event) => {
-      if (event?.target?.closest?.('.background-music-button')) return;
+      if (event?.target?.closest?.('.music-next-button')) return;
       if (!needsUserInteractionRef.current && playbackStartedRef.current) return;
       startPlayback();
     };
@@ -295,18 +296,25 @@ export default function BackgroundMusic() {
     event.stopPropagation();
   };
 
-  return (
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  return createPortal(
     <button
       type="button"
-      className="background-music-button"
+      className="music-next-button"
       data-book-interactive="true"
       onClick={handleNextClick}
-      onPointerDown={stopButtonPropagation}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }}
       onTouchStart={stopButtonPropagation}
       aria-label="Cambiar a la siguiente cancion"
     >
-      <span className="background-music-note" aria-hidden="true">&#9834;</span>
-      <span>Next</span>
-    </button>
+      &#9834; Next
+    </button>,
+    document.body
   );
 }

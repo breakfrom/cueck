@@ -113,13 +113,7 @@ export const bookConfig = {
       captions: ['la más linda', 'modelito'],
     },
 
-    {
-      type: 'cover',
-      background: asset('/pages/backgrounds/bc_6.webp'),
-      title: '¿Continuamos?',
-      subtitle: 'tú decides',
-      style: 'back',
-    },
+
         {
       type: 'photo',
       background: asset('/pages/backgrounds/bc_2.webp'),
@@ -134,6 +128,13 @@ export const bookConfig = {
       presentation: 'polaroid-strip',
       images: [asset('/fotos/10.webp'), asset('/fotos/11.webp')],
       captions: [],
-    }
+    },
+        {
+      type: 'cover',
+      background: asset('/pages/backgrounds/bc_6.webp'),
+      title: '¿Continuamos?',
+      subtitle: 'tú decides',
+      style: 'back',
+    },
   ],
 }

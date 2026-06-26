@@ -45,7 +45,7 @@
  * CONFIGURACIÓN DEL LIBRO DE RECUERDOS
  */
 
-const fondoStickers = '/pages/fondo-stickers.png';
+const fondoStickers = '/pages/fondo-stickers.webp';
 
 export const finalLetterText = `Gabriela, veo tus ojos y me abandonan los problemas,
 
@@ -107,7 +107,7 @@ export const bookConfig = {
   pages: [
     {
       type: 'cover',
-      background: asset('/pages/backgrounds/bc_1.png'),
+      background: asset('/pages/backgrounds/bc_1.webp'),
       title: 'Para Gabriela',
       subtitle: 'Gamboa',
       style: 'front',
@@ -115,47 +115,47 @@ export const bookConfig = {
 
     {
       type: 'mixed',
-      background: asset('/pages/backgrounds/bc_2.png'),
+      background: asset('/pages/backgrounds/bc_2.webp'),
       style: 'editorial',
       presentation: 'stacked',
       content: `La penumbra del cine`,
-      images: [asset('/fotos/1.jpg'), asset('/fotos/2.jpg')],
+      images: [asset('/fotos/1.webp'), asset('/fotos/2.jpg')],
       captions: ['sin avisar', 'se quedó'],
     },
 
     {
       type: 'mixed',
-      background: asset('/pages/backgrounds/bc_3.png'),
+      background: asset('/pages/backgrounds/bc_3.webp'),
       style: 'quote',
       presentation: 'polaroid-strip',
       content: `La penumbra del cine`,
-      images: [asset('/fotos/3.jpg'), asset('/fotos/4.jpg')],
+      images: [asset('/fotos/3.webp'), asset('/fotos/4.webp')],
       captions: ['última hora', 'croqueta'],
     },
 
     {
       type: 'mixed',
-      background: asset('/pages/backgrounds/bc_4.png'),
+      background: asset('/pages/backgrounds/bc_4.webp'),
       style: 'handwritten',
       presentation: 'taped',
       content: `Lgante`,
-      images: [asset('/fotos/5.jpg'), asset('/fotos/6.jpg')],
+      images: [asset('/fotos/5.webp'), asset('/fotos/6.webp')],
       captions: ['que mire como mira su celular', 'cuando te robé algo'],
     },
 
     {
       type: 'mixed',
-      background: asset('/pages/backgrounds/bc_5.png'),
+      background: asset('/pages/backgrounds/bc_5.webp'),
       style: 'floating',
       presentation: 'floating-frame',
       content: `Antes de que te enojes.`,
-      images: [asset('/fotos/7.jpg'), asset('/fotos/1.jpg')],
+      images: [asset('/fotos/7.webp'), asset('/fotos/1.webp')],
       captions: ['la más linda', 'modelito'],
     },
 
     {
       type: 'cover',
-      background: asset('/pages/backgrounds/bc_6.png'),
+      background: asset('/pages/backgrounds/bc_6.webp'),
       title: '¿Continuamos?',
       subtitle: 'tú decides',
       style: 'back',

@@ -304,6 +304,13 @@ export default function BookViewer({ seed, artDirection }) {
   const flipFallbackRef = useRef(null);
   const preloadedAssetsRef = useRef(new Set());
   const containerRef = useRef(null);
+  const panGestureRef = useRef({
+    startX: 0,
+    startY: 0,
+    didPan: false,
+    ignoreClick: false,
+  });
+  const panClickResetRef = useRef(null);
 
   const pages = bookConfig.pages;
   // Build spreads: pair pages into left/right
@@ -323,9 +330,14 @@ export default function BookViewer({ seed, artDirection }) {
   const totalSpreads = spreads.length;
   const interactiveSelector = '[data-book-interactive="true"], button, a, input, textarea, select, [role="button"]';
 
-  const shouldSkipPageNavigation = (event) => (
-    event?.target?.closest?.(interactiveSelector)
-  );
+  const shouldSkipPageNavigation = (event) => {
+    if (panGestureRef.current.ignoreClick) {
+      panGestureRef.current.ignoreClick = false;
+      return true;
+    }
+
+    return event?.target?.closest?.(interactiveSelector);
+  };
 
   const preloadAsset = (src) => {
     if (!src || preloadedAssetsRef.current.has(src) || typeof window === 'undefined') return;
@@ -482,6 +494,53 @@ export default function BookViewer({ seed, artDirection }) {
     goNext();
   };
 
+  const clearPanClickReset = () => {
+    if (panClickResetRef.current) {
+      window.clearTimeout(panClickResetRef.current);
+      panClickResetRef.current = null;
+    }
+  };
+
+  const schedulePanClickReset = () => {
+    clearPanClickReset();
+    panClickResetRef.current = window.setTimeout(() => {
+      panGestureRef.current.ignoreClick = false;
+      panClickResetRef.current = null;
+    }, 160);
+  };
+
+  const handlePanPointerDown = (event) => {
+    if (event.pointerType && event.isPrimary === false) return;
+
+    clearPanClickReset();
+    panGestureRef.current = {
+      startX: event.clientX,
+      startY: event.clientY,
+      didPan: false,
+      ignoreClick: false,
+    };
+  };
+
+  const handlePanPointerMove = (event) => {
+    const gesture = panGestureRef.current;
+    const deltaX = event.clientX - gesture.startX;
+    const deltaY = event.clientY - gesture.startY;
+
+    if (Math.hypot(deltaX, deltaY) > 10) {
+      gesture.didPan = true;
+      gesture.ignoreClick = true;
+    }
+  };
+
+  const handlePanPointerEnd = () => {
+    if (panGestureRef.current.didPan) {
+      schedulePanClickReset();
+      return;
+    }
+
+    panGestureRef.current.ignoreClick = false;
+  };
+
   // Clean up running flip animation only when the viewer unmounts.
   useEffect(() => {
     return () => {
@@ -491,6 +550,7 @@ export default function BookViewer({ seed, artDirection }) {
       if (flipFallbackRef.current) {
         window.clearTimeout(flipFallbackRef.current);
       }
+      clearPanClickReset();
     };
   }, []);
 
@@ -555,82 +615,90 @@ export default function BookViewer({ seed, artDirection }) {
         ›
       </motion.button>
 
-      <motion.div
-        className={`book-body ${isFlipping ? 'book-body-flipping' : ''} ${finalRevealActive ? 'book-body-final' : ''}`}
-        ref={containerRef}
-        variants={entranceVariants}
-        initial="hidden"
-        animate={finalRevealActive ? finalBookAnimation : 'visible'}
+      <div
+        className="book-mobile-pan-area"
+        onPointerDown={handlePanPointerDown}
+        onPointerMove={handlePanPointerMove}
+        onPointerUp={handlePanPointerEnd}
+        onPointerCancel={handlePanPointerEnd}
       >
-        {/* Spine shadow */}
-        <div className="book-spine" />
+        <motion.div
+          className={`book-body ${isFlipping ? 'book-body-flipping' : ''} ${finalRevealActive ? 'book-body-final' : ''}`}
+          ref={containerRef}
+          variants={entranceVariants}
+          initial="hidden"
+          animate={finalRevealActive ? finalBookAnimation : 'visible'}
+        >
+          {/* Spine shadow */}
+          <div className="book-spine" />
 
-        {/* Left page */}
-        <div className="book-page book-page-left" onClick={handleLeftPageClick} style={{ backgroundColor: paperBg }}>
-          {underLeft && (
-            <PageRenderer
-              key={`left-${underLeftIndex}`}
-              page={underLeft}
-              index={underLeftIndex}
-              seed={seed}
-              artDirection={artDirection}
-              side="left"
-              animateIntro={false}
+          {/* Left page */}
+          <div className="book-page book-page-left" onClick={handleLeftPageClick} style={{ backgroundColor: paperBg }}>
+            {underLeft && (
+              <PageRenderer
+                key={`left-${underLeftIndex}`}
+                page={underLeft}
+                index={underLeftIndex}
+                seed={seed}
+                artDirection={artDirection}
+                side="left"
+                animateIntro={false}
+              />
+            )}
+          </div>
+
+          {/* Right page */}
+          <div className="book-page book-page-right" onClick={handleRightPageClick} style={{ backgroundColor: paperBg }}>
+            {underRight && (
+              <PageRenderer
+                key={`right-${underRightIndex}`}
+                page={underRight}
+                index={underRightIndex}
+                seed={seed}
+                artDirection={artDirection}
+                side="right"
+                animateIntro={false}
+              />
+            )}
+          </div>
+
+          {/* Flip animation overlay */}
+          {isFlipping && flipSnapshot && flipFront && (
+            <PageFlipOverlay
+              progress={flipProgress}
+              direction={flipDirection}
+              frontContent={
+                <div className={`book-page ${flipSnapshot.flipFrontSide === 'right' ? 'book-page-right' : 'book-page-left'}`} style={{ backgroundColor: paperBg }}>
+                  <PageRenderer
+                    page={flipFront}
+                    index={flipSnapshot.flipFrontIndex}
+                    seed={seed}
+                    artDirection={artDirection}
+                    side={flipSnapshot.flipFrontSide}
+                    animateIntro={false}
+                  />
+                </div>
+              }
+              backContent={
+                <div className={`book-page ${flipSnapshot.flipBackSide === 'left' ? 'book-page-left' : 'book-page-right'}`} style={{ backgroundColor: paperBg }}>
+                  <PageRenderer
+                    page={flipSnapshot.flipBack}
+                    index={flipSnapshot.flipBackIndex}
+                    seed={seed}
+                    artDirection={artDirection}
+                    side={flipSnapshot.flipBackSide}
+                    animateIntro={false}
+                  />
+                </div>
+              }
             />
           )}
-        </div>
 
-        {/* Right page */}
-        <div className="book-page book-page-right" onClick={handleRightPageClick} style={{ backgroundColor: paperBg }}>
-          {underRight && (
-            <PageRenderer
-              key={`right-${underRightIndex}`}
-              page={underRight}
-              index={underRightIndex}
-              seed={seed}
-              artDirection={artDirection}
-              side="right"
-              animateIntro={false}
-            />
-          )}
-        </div>
+          {/* Page edge lines (subtle) */}
+          <div className="book-page-edges" />
 
-        {/* Flip animation overlay */}
-        {isFlipping && flipSnapshot && flipFront && (
-          <PageFlipOverlay
-            progress={flipProgress}
-            direction={flipDirection}
-            frontContent={
-              <div className={`book-page ${flipSnapshot.flipFrontSide === 'right' ? 'book-page-right' : 'book-page-left'}`} style={{ backgroundColor: paperBg }}>
-                <PageRenderer
-                  page={flipFront}
-                  index={flipSnapshot.flipFrontIndex}
-                  seed={seed}
-                  artDirection={artDirection}
-                  side={flipSnapshot.flipFrontSide}
-                  animateIntro={false}
-                />
-              </div>
-            }
-            backContent={
-              <div className={`book-page ${flipSnapshot.flipBackSide === 'left' ? 'book-page-left' : 'book-page-right'}`} style={{ backgroundColor: paperBg }}>
-                <PageRenderer
-                  page={flipSnapshot.flipBack}
-                  index={flipSnapshot.flipBackIndex}
-                  seed={seed}
-                  artDirection={artDirection}
-                  side={flipSnapshot.flipBackSide}
-                  animateIntro={false}
-                />
-              </div>
-            }
-          />
-        )}
-
-        {/* Page edge lines (subtle) */}
-        <div className="book-page-edges" />
-
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* Page counter */}
       <motion.div className="book-page-counter" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>

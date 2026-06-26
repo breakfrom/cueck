@@ -1,14 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
+const SOUND_BASE_URL = import.meta.env.BASE_URL || '/';
 const TRACKS = [
-  '/sounds/sound_1.mp3',
-  '/sounds/sound_2.mp3',
-  '/sounds/sound_3.mp3',
-    '/sounds/sound_4.mp3',
-];
+  'sound_1.mp3',
+  'sound_2.mp3',
+  'sound_3.mp3',
+].map((fileName) => `${SOUND_BASE_URL}sounds/${fileName}`);
 
 const TARGET_VOLUME = 0.16;
-const FADE_SECONDS = 4;
+const FADE_IN_MS = 2400;
+const FADE_OUT_MS = 1200;
+const END_FADE_SECONDS = 4;
 
 function shuffleTracks(tracks) {
   const shuffled = [...tracks];
@@ -19,157 +21,224 @@ function shuffleTracks(tracks) {
   return shuffled;
 }
 
+function wrapIndex(index, length) {
+  return ((index % length) + length) % length;
+}
+
 export default function BackgroundMusic() {
-  const orderRef = useRef(null);
+  const trackOrder = useMemo(() => shuffleTracks(TRACKS), []);
   const audioRef = useRef(null);
-  const trackIndexRef = useRef(0);
+  const currentIndexRef = useRef(0);
   const fadeFrameRef = useRef(null);
+  const fadeResolveRef = useRef(null);
   const retryTimerRef = useRef(null);
-  const playAttemptRef = useRef(false);
+  const autoplayTimerRef = useRef(null);
   const playRequestRef = useRef(0);
   const playbackStartedRef = useRef(false);
-  const fadeOutStartedRef = useRef(false);
+  const playAttemptRef = useRef(false);
+  const endingFadeStartedRef = useRef(false);
+  const transitionRef = useRef(false);
   const unavailableTracksRef = useRef(new Set());
+  const destroyedRef = useRef(false);
 
-  if (!orderRef.current) {
-    orderRef.current = shuffleTracks(TRACKS);
-  }
+  const publishMusicState = useCallback((status = 'idle') => {
+    if (typeof window === 'undefined') return;
+
+    const currentTrack = trackOrder[currentIndexRef.current] || null;
+    window.__gabrielaMusicState = {
+      currentIndex: currentIndexRef.current,
+      currentTrack,
+      order: [...trackOrder],
+      playbackStarted: playbackStartedRef.current,
+      status,
+    };
+    document.documentElement.dataset.musicTrack = currentTrack || '';
+    document.documentElement.dataset.musicStatus = status;
+  }, [trackOrder]);
+
+  const stopFade = useCallback(() => {
+    if (fadeFrameRef.current) {
+      window.cancelAnimationFrame(fadeFrameRef.current);
+      fadeFrameRef.current = null;
+    }
+
+    if (fadeResolveRef.current) {
+      fadeResolveRef.current();
+      fadeResolveRef.current = null;
+    }
+  }, []);
+
+  const fadeTo = useCallback((targetVolume, durationMs) => new Promise((resolve) => {
+    const audio = audioRef.current;
+    stopFade();
+
+    if (!audio || destroyedRef.current) {
+      resolve();
+      return;
+    }
+
+    const fromVolume = audio.volume;
+    const startedAt = performance.now();
+    fadeResolveRef.current = resolve;
+
+    const step = (now) => {
+      if (destroyedRef.current) return;
+
+      const progress = Math.min((now - startedAt) / durationMs, 1);
+      const nextVolume = fromVolume + (targetVolume - fromVolume) * progress;
+      audio.volume = Math.max(0, Math.min(TARGET_VOLUME, nextVolume));
+
+      if (progress < 1) {
+        fadeFrameRef.current = window.requestAnimationFrame(step);
+        return;
+      }
+
+      fadeFrameRef.current = null;
+      fadeResolveRef.current = null;
+      resolve();
+    };
+
+    fadeFrameRef.current = window.requestAnimationFrame(step);
+  }), [stopFade]);
+
+  const playTrackAt = useCallback(async (index) => {
+    const audio = audioRef.current;
+    if (!audio || destroyedRef.current || playAttemptRef.current) return false;
+
+    const safeIndex = wrapIndex(index, trackOrder.length);
+    const track = trackOrder[safeIndex];
+    const requestId = playRequestRef.current + 1;
+    playRequestRef.current = requestId;
+    currentIndexRef.current = safeIndex;
+    playAttemptRef.current = true;
+    playbackStartedRef.current = false;
+    endingFadeStartedRef.current = false;
+    publishMusicState('loading');
+
+    stopFade();
+    audio.pause();
+    audio.src = track;
+    audio.currentTime = 0;
+    audio.volume = 0;
+    audio.load();
+
+    try {
+      await audio.play();
+    } catch {
+      if (requestId === playRequestRef.current) {
+        playAttemptRef.current = false;
+        playbackStartedRef.current = false;
+        publishMusicState('blocked');
+      }
+      return false;
+    }
+
+    if (destroyedRef.current || requestId !== playRequestRef.current) {
+      return false;
+    }
+
+    playAttemptRef.current = false;
+    playbackStartedRef.current = true;
+    unavailableTracksRef.current.delete(track);
+    publishMusicState('playing');
+    void fadeTo(TARGET_VOLUME, FADE_IN_MS);
+    return true;
+  }, [fadeTo, publishMusicState, stopFade, trackOrder]);
+
+  const startPlayback = useCallback(() => {
+    if (playbackStartedRef.current || playAttemptRef.current) return;
+    void playTrackAt(currentIndexRef.current);
+  }, [playTrackAt]);
+
+  const nextTrack = useCallback(async () => {
+    if (transitionRef.current) return;
+
+    const audio = audioRef.current;
+    const nextIndex = wrapIndex(currentIndexRef.current + 1, trackOrder.length);
+
+    if (!audio || !playbackStartedRef.current) {
+      playAttemptRef.current = false;
+      currentIndexRef.current = nextIndex;
+      void playTrackAt(nextIndex);
+      return;
+    }
+
+    transitionRef.current = true;
+    playRequestRef.current += 1;
+    publishMusicState('fading');
+
+    await fadeTo(0, FADE_OUT_MS);
+
+    if (!destroyedRef.current) {
+      audio.pause();
+      playAttemptRef.current = false;
+      playbackStartedRef.current = false;
+      await playTrackAt(nextIndex);
+    }
+
+    transitionRef.current = false;
+  }, [fadeTo, playTrackAt, publishMusicState, trackOrder.length]);
 
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'auto';
     audio.volume = 0;
     audioRef.current = audio;
-
-    let destroyed = false;
+    destroyedRef.current = false;
 
     if (typeof window !== 'undefined') {
-      window.__gabrielaMusicOrder = [...orderRef.current];
-      document.documentElement.dataset.musicOrder = orderRef.current.join('|');
+      window.__gabrielaMusicOrder = [...trackOrder];
+      document.documentElement.dataset.musicOrder = trackOrder.join('|');
+      publishMusicState('idle');
     }
 
-    const stopFade = () => {
-      if (fadeFrameRef.current) {
-        window.cancelAnimationFrame(fadeFrameRef.current);
-        fadeFrameRef.current = null;
-      }
-    };
-
-    const fadeTo = (targetVolume, durationMs) => {
-      stopFade();
-      const fromVolume = audio.volume;
-      const startedAt = performance.now();
-
-      const step = (now) => {
-        if (destroyed) return;
-        const progress = Math.min((now - startedAt) / durationMs, 1);
-        audio.volume = fromVolume + (targetVolume - fromVolume) * progress;
-
-        if (progress < 1) {
-          fadeFrameRef.current = window.requestAnimationFrame(step);
-        } else {
-          fadeFrameRef.current = null;
-        }
-      };
-
-      fadeFrameRef.current = window.requestAnimationFrame(step);
-    };
-
-    const playCurrentTrack = () => {
-      if (destroyed || playbackStartedRef.current || playAttemptRef.current) return;
-
-      const order = orderRef.current;
-      const currentTrack = order[trackIndexRef.current];
-      const requestId = playRequestRef.current + 1;
-      playRequestRef.current = requestId;
-
-      playAttemptRef.current = true;
-      playbackStartedRef.current = false;
-      fadeOutStartedRef.current = false;
-      stopFade();
-
-      audio.pause();
-      audio.src = currentTrack;
-      audio.currentTime = 0;
-      audio.volume = 0;
-      audio.load();
-
-      let playPromise;
-      try {
-        playPromise = audio.play();
-      } catch {
-        playAttemptRef.current = false;
-        return;
-      }
-
-      const handlePlaybackReady = () => {
-        if (destroyed || requestId !== playRequestRef.current) return;
-        playAttemptRef.current = false;
-        playbackStartedRef.current = true;
-        unavailableTracksRef.current.delete(currentTrack);
-        fadeTo(TARGET_VOLUME, FADE_SECONDS * 1000);
-      };
-
-      const handlePlaybackBlocked = () => {
-        if (destroyed || requestId !== playRequestRef.current) return;
-        playAttemptRef.current = false;
-        playbackStartedRef.current = false;
-      };
-
-      if (playPromise?.then) {
-        playPromise
-          .then(handlePlaybackReady)
-          .catch(handlePlaybackBlocked);
-      } else {
-        handlePlaybackReady();
-      }
-    };
-
-    const playNextTrack = () => {
-      trackIndexRef.current = (trackIndexRef.current + 1) % orderRef.current.length;
+    const playNextFromOrder = () => {
+      const nextIndex = wrapIndex(currentIndexRef.current + 1, trackOrder.length);
       playAttemptRef.current = false;
       playbackStartedRef.current = false;
-      playCurrentTrack();
+      void playTrackAt(nextIndex);
     };
 
     const handleEnded = () => {
-      playNextTrack();
+      if (!transitionRef.current) {
+        playNextFromOrder();
+      }
     };
 
     const handleError = () => {
-      const currentTrack = orderRef.current[trackIndexRef.current];
-      unavailableTracksRef.current.add(currentTrack);
+      const failedTrack = trackOrder[currentIndexRef.current];
+      unavailableTracksRef.current.add(failedTrack);
       playAttemptRef.current = false;
       playbackStartedRef.current = false;
+      publishMusicState('error');
 
-      if (unavailableTracksRef.current.size >= orderRef.current.length) {
+      if (unavailableTracksRef.current.size >= trackOrder.length) {
         if (!retryTimerRef.current) {
           retryTimerRef.current = window.setTimeout(() => {
             retryTimerRef.current = null;
             unavailableTracksRef.current.clear();
-            playCurrentTrack();
+            startPlayback();
           }, 5000);
         }
         return;
       }
 
-      playNextTrack();
+      playNextFromOrder();
     };
 
     const handleTimeUpdate = () => {
-      if (!Number.isFinite(audio.duration) || fadeOutStartedRef.current) return;
+      if (!Number.isFinite(audio.duration) || endingFadeStartedRef.current || transitionRef.current) return;
 
       const remaining = audio.duration - audio.currentTime;
-      if (remaining <= FADE_SECONDS && audio.volume > 0.01) {
-        fadeOutStartedRef.current = true;
-        fadeTo(0, Math.max(remaining, 0.8) * 1000);
+      if (remaining <= END_FADE_SECONDS && audio.volume > 0.01) {
+        endingFadeStartedRef.current = true;
+        void fadeTo(0, Math.max(remaining, 0.8) * 1000);
       }
     };
 
-    const startFromInteraction = () => {
-      if (playbackStartedRef.current) return;
-      playAttemptRef.current = false;
-      playCurrentTrack();
+    const startFromInteraction = (event) => {
+      if (event?.target?.closest?.('.background-music-button')) return;
+      startPlayback();
     };
 
     audio.addEventListener('ended', handleEnded);
@@ -179,14 +248,21 @@ export default function BackgroundMusic() {
     window.addEventListener('keydown', startFromInteraction, true);
     window.addEventListener('touchstart', startFromInteraction, true);
 
-    const autoplayTimer = window.setTimeout(playCurrentTrack, 300);
+    autoplayTimerRef.current = window.setTimeout(startPlayback, 300);
 
     return () => {
-      destroyed = true;
-      window.clearTimeout(autoplayTimer);
+      destroyedRef.current = true;
+
+      if (autoplayTimerRef.current) {
+        window.clearTimeout(autoplayTimerRef.current);
+        autoplayTimerRef.current = null;
+      }
+
       if (retryTimerRef.current) {
         window.clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
       }
+
       stopFade();
       audio.pause();
       audio.removeAttribute('src');
@@ -198,9 +274,35 @@ export default function BackgroundMusic() {
       window.removeEventListener('keydown', startFromInteraction, true);
       window.removeEventListener('touchstart', startFromInteraction, true);
       delete document.documentElement.dataset.musicOrder;
+      delete document.documentElement.dataset.musicStatus;
+      delete document.documentElement.dataset.musicTrack;
+      delete window.__gabrielaMusicState;
       audioRef.current = null;
     };
-  }, []);
+  }, [fadeTo, playTrackAt, publishMusicState, startPlayback, stopFade, trackOrder]);
 
-  return null;
+  const handleNextClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    void nextTrack();
+  };
+
+  const stopButtonPropagation = (event) => {
+    event.stopPropagation();
+  };
+
+  return (
+    <button
+      type="button"
+      className="background-music-button"
+      data-book-interactive="true"
+      onClick={handleNextClick}
+      onPointerDown={stopButtonPropagation}
+      onTouchStart={stopButtonPropagation}
+      aria-label="Cambiar a la siguiente cancion"
+    >
+      <span className="background-music-note" aria-hidden="true">&#9834;</span>
+      <span>Next</span>
+    </button>
+  );
 }

@@ -119,7 +119,7 @@ export const bookConfig = {
       style: 'editorial',
       presentation: 'stacked',
       content: `La penumbra del cine`,
-      images: [asset('/fotos/1.webp'), asset('/fotos/2.jpg')],
+      images: [asset('/fotos/1.webp'), asset('/fotos/2.webp')],
       captions: ['sin avisar', 'se quedó'],
     },
 

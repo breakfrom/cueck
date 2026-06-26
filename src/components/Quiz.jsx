@@ -1,6 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const correctBirthDate = {
+  day: 16,
+  month: 9,
+};
+
 const baseQuestions = [
   {
     question: "¿Cuál es tu color favorito?",
@@ -42,6 +47,9 @@ function createRandomQuiz() {
 export default function Quiz({ onComplete, artDirection }) {
   const questions = useMemo(() => createRandomQuiz(), []);
   const [currentQ, setCurrentQ] = useState(0);
+  const [showBirthCheck, setShowBirthCheck] = useState(false);
+  const [birthDay, setBirthDay] = useState('');
+  const [birthMonth, setBirthMonth] = useState('');
   const [isError, setIsError] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(null);
@@ -60,7 +68,9 @@ export default function Quiz({ onComplete, artDirection }) {
           setIsCorrect(false);
           setSelectedIdx(null);
         } else {
-          onComplete();
+          setShowBirthCheck(true);
+          setIsCorrect(false);
+          setSelectedIdx(null);
         }
       }, 800);
     } else {
@@ -72,16 +82,40 @@ export default function Quiz({ onComplete, artDirection }) {
     }
   };
 
+  const handleBirthInput = (setter) => (event) => {
+    setter(event.target.value.replace(/\D/g, ''));
+  };
+
+  const handleBirthSubmit = (event) => {
+    event.preventDefault();
+
+    const normalizedDay = Number.parseInt(birthDay, 10);
+    const normalizedMonth = Number.parseInt(birthMonth, 10);
+
+    if (normalizedDay === correctBirthDate.day && normalizedMonth === correctBirthDate.month) {
+      setIsCorrect(true);
+      setTimeout(onComplete, 700);
+      return;
+    }
+
+    setIsError(true);
+    setTimeout(() => {
+      setIsError(false);
+    }, 600);
+  };
+
   const q = questions[currentQ];
+  const activeStep = showBirthCheck ? questions.length : currentQ;
+  const totalSteps = questions.length + 1;
 
   // Progress dots
-  const dots = questions.map((_, i) => (
+  const dots = Array.from({ length: totalSteps }).map((_, i) => (
     <motion.div
       key={i}
       className="quiz-dot"
       style={{
-        backgroundColor: i < currentQ ? (palette.primary || '#c9184a') : i === currentQ ? (palette.primary || '#c9184a') + '60' : (palette.muted || '#999') + '30',
-        width: i === currentQ ? 24 : 8,
+        backgroundColor: i < activeStep ? (palette.primary || '#c9184a') : i === activeStep ? (palette.primary || '#c9184a') + '60' : (palette.muted || '#999') + '30',
+        width: i === activeStep ? 24 : 8,
       }}
       layout
     />
@@ -133,69 +167,135 @@ export default function Quiz({ onComplete, artDirection }) {
           <div className="quiz-progress">{dots}</div>
 
           {/* Question */}
-          <AnimatePresence mode="wait">
-            <motion.h2
-              key={`q-${currentQ}`}
-              className="quiz-question"
-              style={{ fontFamily: `'${fonts.title || 'Playfair Display'}', serif` }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              {q.question}
-            </motion.h2>
-          </AnimatePresence>
+          {!showBirthCheck && (
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={`q-${currentQ}`}
+                className="quiz-question"
+                style={{ fontFamily: `'${fonts.title || 'Playfair Display'}', serif` }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                {q.question}
+              </motion.h2>
+            </AnimatePresence>
+          )}
 
           {/* Options */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`opts-${currentQ}`}
-              className="quiz-options"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {q.options.map((opt, idx) => {
-                let optionClass = 'quiz-option';
-                if (selectedIdx === idx && isCorrect) optionClass += ' quiz-option-correct';
-                if (selectedIdx === idx && isError) optionClass += ' quiz-option-wrong';
+          {!showBirthCheck && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`opts-${currentQ}`}
+                className="quiz-options"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {q.options.map((opt, idx) => {
+                  let optionClass = 'quiz-option';
+                  if (selectedIdx === idx && isCorrect) optionClass += ' quiz-option-correct';
+                  if (selectedIdx === idx && isError) optionClass += ' quiz-option-wrong';
 
-                return (
-                  <motion.button
-                    key={idx}
-                    className={optionClass}
-                    onClick={() => handleAnswer(idx)}
-                    style={{
-                      fontFamily: `'${fonts.body || 'Inter'}', sans-serif`,
-                      '--option-accent': palette.primary || '#c9184a',
-                    }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1, duration: 0.4 }}
-                    whileHover={{ scale: 1.02, x: 4 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={selectedIdx !== null}
-                  >
-                    <span className="quiz-option-indicator">{String.fromCharCode(65 + idx)}</span>
-                    {opt}
-                  </motion.button>
-                );
-              })}
-            </motion.div>
+                  return (
+                    <motion.button
+                      key={idx}
+                      className={optionClass}
+                      onClick={() => handleAnswer(idx)}
+                      style={{
+                        fontFamily: `'${fonts.body || 'Inter'}', sans-serif`,
+                        '--option-accent': palette.primary || '#c9184a',
+                      }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.1, duration: 0.4 }}
+                      whileHover={{ scale: 1.02, x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      disabled={selectedIdx !== null}
+                    >
+                      <span className="quiz-option-indicator">{String.fromCharCode(65 + idx)}</span>
+                      {opt}
+                    </motion.button>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
+          )}
+
+          <AnimatePresence mode="wait">
+            {showBirthCheck && (
+              <motion.form
+                key="birth-check"
+                className="birth-check-form"
+                onSubmit={handleBirthSubmit}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -18 }}
+                transition={{ duration: 0.45 }}
+              >
+                <h2
+                  className="quiz-question"
+                  style={{ fontFamily: `'${fonts.title || 'Playfair Display'}', serif` }}
+                >
+                  ¿Día y mes de nacimiento?
+                </h2>
+
+                <div className="birth-field-grid">
+                  <label className="birth-field">
+                    <span>Día</span>
+                    <input
+                      className="birth-input"
+                      value={birthDay}
+                      onChange={handleBirthInput(setBirthDay)}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="DD"
+                      aria-label="Día de nacimiento"
+                    />
+                  </label>
+
+                  <label className="birth-field">
+                    <span>Mes</span>
+                    <input
+                      className="birth-input"
+                      value={birthMonth}
+                      onChange={handleBirthInput(setBirthMonth)}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="MM"
+                      aria-label="Mes de nacimiento"
+                    />
+                  </label>
+                </div>
+
+                <motion.button
+                  className="birth-submit"
+                  type="submit"
+                  style={{ fontFamily: `'${fonts.body || 'Inter'}', sans-serif` }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={birthDay.length === 0 || birthMonth.length === 0}
+                >
+                  Continuar
+                </motion.button>
+              </motion.form>
+            )}
           </AnimatePresence>
 
           {/* Subtle hint */}
-          <motion.p
-            className="quiz-hint"
-            style={{ fontFamily: `'${fonts.handwritten || 'Caveat'}', cursive` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            transition={{ delay: 2 }}
-          >
-            👌
-          </motion.p>
+          {!showBirthCheck && (
+            <motion.p
+              className="quiz-hint"
+              style={{ fontFamily: `'${fonts.handwritten || 'Caveat'}', cursive` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              transition={{ delay: 2 }}
+            >
+              👌
+            </motion.p>
+          )}
         </motion.div>
       </div>
     </div>

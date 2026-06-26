@@ -213,6 +213,80 @@ body {
   margin-top: 25px;
 }
 
+.birth-check-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.birth-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.birth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.birth-field span {
+  color: rgba(255,255,255,0.58);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.birth-input {
+  width: 100%;
+  min-height: 62px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 14px;
+  color: rgba(255,255,255,0.9);
+  font: 600 1.45rem/1 'Inter', sans-serif;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.birth-input::placeholder {
+  color: rgba(255,255,255,0.22);
+}
+
+.birth-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: color-mix(in srgb, var(--palette-primary), white 25%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--palette-primary) 24%, transparent);
+}
+
+.birth-submit {
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid color-mix(in srgb, var(--palette-primary), white 18%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--palette-primary) 64%, transparent);
+  color: rgba(255,255,255,0.92);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.birth-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.birth-submit:not(:disabled):hover {
+  background: color-mix(in srgb, var(--palette-primary) 76%, transparent);
+  border-color: rgba(255,255,255,0.32);
+}
+
 /* ═══════════════════════════════════════
    BOOK VIEWER
    ═══════════════════════════════════════ */

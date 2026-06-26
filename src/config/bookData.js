@@ -47,8 +47,17 @@
 
 const fondoStickers = '/pages/fondo-stickers.webp';
 
-export const finalLetterText = `Gabriela, te lo he dicho y te seguiré diciendo, contigo es con quien quiero estar, déjame ser quien te trate como la princesa que eres, sé que mis celos hicieron que esto sea fugaz, ya me corregí para que lo nuestro sea permanente, si tus dudas invaden tú decisión, yo el arreglo lo encuentro, cada noche que no sé de ti pues mi mente hace verte en algunos sueños, la noche afuera de tu casa al ver tu mirada y quitarme todos los problemas me hizo ver que tú eres la chica, extraño salir y conversar contigo, sé que verte no es fácil, pero estoy dispuesto, prefiero tragarme los celos a preferir caminar de más por lugares a ver si me cruzo contigo, pues de ti nunca me olvido,
-Dices que nada de lo que diga hará cambiar algo, quizá pienses que las palabras se las lleva el viento, pero nunca es así cuando se dicen con sentimiento, prometo que esto traspasará cualquier tiempo, que si este es nuestro momento? nadie lo sabe, no importa si quieres salir de mañana, da la oportunidad y por ti voy a pasar, así un "no" salga de ti, pensar en eso en mi mente no cabe, porque cuando arrescotabas en mi pecho todo se sentía mejor, detrás de ti seguiré estando y estuve. Nuestra primera salida a ciegas, nuestra primera mirada, como eso nunca habrá nada`;
+export const finalLetterText = `Gabriela, te lo he dicho y te lo seguiré diciendo: contigo es con quien quiero estar. Déjame ser quien te trate como la princesa que eres. Sé que mis celos hicieron que esto sea fugaz, pero ya me corregí para que lo nuestro sea permanente.
+
+Si tus dudas invaden tu decisión, yo el arreglo lo encuentro. Cada noche que no sé de ti, mi mente me hace verte en algunos sueños. La noche afuera de tu casa, al ver tu mirada y sentir cómo se me iban todos los problemas, me hizo entender que tú eres la chica que quiero.
+
+Extraño salir y conversar contigo. Sé que verte no es fácil, pero estoy dispuesto. Prefiero tragarme los celos antes que dejar de caminar de más por lugares donde tal vez pueda cruzarme contigo, porque de ti nunca me olvido.
+
+Dices que nada de lo que diga hará cambiar algo; quizá pienses que las palabras se las lleva el viento, pero nunca es así cuando se dicen con sentimiento. Prometo que esto traspasará cualquier tiempo. ¿Que si este es nuestro momento? Nadie lo sabe.
+
+No importa si quieres salir de mañana, da la oportunidad y por ti voy a pasar. Así un “no” salga de ti, pensar en eso en mi mente no cabe, porque cuando te recostabas en mi pecho todo se sentía mejor.
+
+Detrás de ti seguiré estando, como siempre estuve. Nuestra primera salida a ciegas, nuestra primera mirada… como eso nunca habrá nada.`;
 
 /**
  * CONFIGURACIÓN DEL LIBRO DE RECUERDOS

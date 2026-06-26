@@ -32,13 +32,13 @@ export default function BackgroundMusic() {
   const fadeFrameRef = useRef(null);
   const fadeResolveRef = useRef(null);
   const retryTimerRef = useRef(null);
-  const autoplayTimerRef = useRef(null);
   const playRequestRef = useRef(0);
   const playbackStartedRef = useRef(false);
   const playAttemptRef = useRef(false);
   const endingFadeStartedRef = useRef(false);
   const transitionRef = useRef(false);
   const unavailableTracksRef = useRef(new Set());
+  const needsUserInteractionRef = useRef(false);
   const destroyedRef = useRef(false);
 
   const publishMusicState = useCallback((status = 'idle') => {
@@ -50,10 +50,12 @@ export default function BackgroundMusic() {
       currentTrack,
       order: [...trackOrder],
       playbackStarted: playbackStartedRef.current,
+      needsUserInteraction: needsUserInteractionRef.current,
       status,
     };
     document.documentElement.dataset.musicTrack = currentTrack || '';
     document.documentElement.dataset.musicStatus = status;
+    document.documentElement.dataset.musicNeedsUserInteraction = String(needsUserInteractionRef.current);
   }, [trackOrder]);
 
   const stopFade = useCallback(() => {
@@ -113,6 +115,7 @@ export default function BackgroundMusic() {
     playAttemptRef.current = true;
     playbackStartedRef.current = false;
     endingFadeStartedRef.current = false;
+    needsUserInteractionRef.current = false;
     publishMusicState('loading');
 
     stopFade();
@@ -124,10 +127,12 @@ export default function BackgroundMusic() {
 
     try {
       await audio.play();
-    } catch {
+    } catch (error) {
       if (requestId === playRequestRef.current) {
+        console.warn('audio play blocked', error);
         playAttemptRef.current = false;
         playbackStartedRef.current = false;
+        needsUserInteractionRef.current = true;
         publishMusicState('blocked');
       }
       return false;
@@ -139,6 +144,7 @@ export default function BackgroundMusic() {
 
     playAttemptRef.current = false;
     playbackStartedRef.current = true;
+    needsUserInteractionRef.current = false;
     unavailableTracksRef.current.delete(track);
     publishMusicState('playing');
     void fadeTo(TARGET_VOLUME, FADE_IN_MS);
@@ -210,6 +216,7 @@ export default function BackgroundMusic() {
       unavailableTracksRef.current.add(failedTrack);
       playAttemptRef.current = false;
       playbackStartedRef.current = false;
+      needsUserInteractionRef.current = false;
       publishMusicState('error');
 
       if (unavailableTracksRef.current.size >= trackOrder.length) {
@@ -238,6 +245,7 @@ export default function BackgroundMusic() {
 
     const startFromInteraction = (event) => {
       if (event?.target?.closest?.('.background-music-button')) return;
+      if (!needsUserInteractionRef.current && playbackStartedRef.current) return;
       startPlayback();
     };
 
@@ -248,15 +256,10 @@ export default function BackgroundMusic() {
     window.addEventListener('keydown', startFromInteraction, true);
     window.addEventListener('touchstart', startFromInteraction, true);
 
-    autoplayTimerRef.current = window.setTimeout(startPlayback, 300);
+    startPlayback();
 
     return () => {
       destroyedRef.current = true;
-
-      if (autoplayTimerRef.current) {
-        window.clearTimeout(autoplayTimerRef.current);
-        autoplayTimerRef.current = null;
-      }
 
       if (retryTimerRef.current) {
         window.clearTimeout(retryTimerRef.current);
@@ -276,6 +279,7 @@ export default function BackgroundMusic() {
       delete document.documentElement.dataset.musicOrder;
       delete document.documentElement.dataset.musicStatus;
       delete document.documentElement.dataset.musicTrack;
+      delete document.documentElement.dataset.musicNeedsUserInteraction;
       delete window.__gabrielaMusicState;
       audioRef.current = null;
     };
